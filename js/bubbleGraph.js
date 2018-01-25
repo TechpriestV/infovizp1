@@ -14,15 +14,16 @@ function bubbleChart() {
         groupingForce = .5,
         columnForGroup = "Major",
         columnForRadius = "totalSkill",
+        skills = ["Skill 1", "Skill 2", "Skill 3", "Skill 4", "Skill 5", "Skill 6", "Skill 7", "Skill 8", "Skill 9", "Skill 10", "Skill 11", "Skill 12"],
         colorSet = d3.schemeCategory20c,
         padding = 1.1;
 
     
 
     function chart(selection) {
-        function test(argument) {
-            console.log("Hej")
-        }
+        // function test(argument) {
+        //     console.log("Hej")
+        // }
         var data = selection.enter().data(),
             div = selection,
             svg = div.selectAll('svg')
@@ -38,18 +39,23 @@ function bubbleChart() {
         var clusters = new Array(Object.keys(counts).length);
         
         data.forEach(function(d) {
-            d["totalSkill"]=+d["Skill 1"] + 
-                            +d["Skill 2"] + 
-                            +d["Skill 3"] + 
-                            +d["Skill 4"] + 
-                            +d["Skill 5"] + 
-                            +d["Skill 6"] + 
-                            +d["Skill 7"] + 
-                            +d["Skill 8"] + 
-                            +d["Skill 9"] + 
-                            +d["Skill 10"] + 
-                            +d["Skill 11"] + 
-                            +d["Skill 12"];
+            // d["totalSkill"]=+d["Skill 1"] + 
+            //                 +d["Skill 2"] + 
+            //                 +d["Skill 3"] + 
+            //                 +d["Skill 4"] + 
+            //                 +d["Skill 5"] + 
+            //                 +d["Skill 6"] + 
+            //                 +d["Skill 7"] + 
+            //                 +d["Skill 8"] + 
+            //                 +d["Skill 9"] + 
+            //                 +d["Skill 10"] + 
+            //                 +d["Skill 11"] + 
+            //                 +d["Skill 12"];
+            d["totalSkill"] = 0;
+            for (var i = 0; i < skills.length; i++) {
+                // console.log(d[skills[i]])
+                d["totalSkill"] += +d[skills[i]];
+            }
             d["radius"] = d[columnForRadius];
             // d["cluster"] = d[columnForGroup];
 
@@ -61,7 +67,7 @@ function bubbleChart() {
             return +d[columnForRadius];
         }), d3.max(data, function(d) {
             return +d[columnForRadius];
-        })]).range([mini, maxi])
+        })]).range([mini, maxi]);
 
         var tooltip = selection
             .append("div")
@@ -98,7 +104,7 @@ function bubbleChart() {
                 .attr("cy", function(d) {
                     return d.y;
                 });
-        }
+        };
 
         function forceCluster(alpha) {
             for (var i = 0, n = data.length, node, cluster, k = alpha * 1; i < n; ++i) {
@@ -106,8 +112,8 @@ function bubbleChart() {
                 cluster = clusters[node[columnForGroup]];
                 node.vx -= (node.x - cluster.x) * k;
                 node.vy -= (node.y - cluster.y) * k;
-          }
-        }
+          };
+        };
 
         
         var node = svg.selectAll("circle")
@@ -143,7 +149,7 @@ function bubbleChart() {
                 return tooltip.style("visibility", "hidden");
             });
         
-    }
+    };
 
     chart.columnForGroup = function(value) {
         if (!arguments.length) {
@@ -151,7 +157,15 @@ function bubbleChart() {
         }
         columnForGroup = value;
         return chart;
-    }
+    };
+    chart.skills = function(value) {
+        if(!arguments.length){
+            return skills;
+        }
+        skills = value;
+        console.log(skills)
+        return skills;
+    };
 
     // chart.width = function(value) {
     //     if (!arguments.length) {
@@ -185,6 +199,6 @@ function bubbleChart() {
     //     columnForRadius = value;
     //     return chart;
     // };
-
+    console.log("Am I alive?")
     return chart;
 }
