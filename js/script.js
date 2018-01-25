@@ -22,7 +22,8 @@ d3.csv("data/realData.csv", function(error, data) {
             draw(d)
         })
 
-
+    var chart = bubbleChart().columnForGroup("Major");
+        d3.select("#chart").data(data).call(chart);
     // console.log(data)
     function draw(filter) {
         $('svg').empty()
