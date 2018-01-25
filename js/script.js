@@ -138,9 +138,20 @@ d3.csv("data/realData.csv", function(error, data) {
             d.active = !d.active
             // console.log(d)
             drawButtons()
-            draw()
+            
+            // draw()
 
         })
+        d3.select("redraw").selectAll("button")
+        .data(["Redraw"])
+        .enter()
+        .append("Button")
+        .text(function(d) {return d})
+        .style("background-color", "grey")
+        .style("color", "white")
+        .on("mousedown", function() {
+            draw();
+        });
 
     }
 

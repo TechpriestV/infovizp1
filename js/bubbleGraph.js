@@ -163,7 +163,7 @@ function bubbleChart() {
             return skills;
         }
         skills = value;
-        console.log(skills)
+        // console.log(skills)
         return skills;
     };
 
@@ -199,6 +199,6 @@ function bubbleChart() {
     //     columnForRadius = value;
     //     return chart;
     // };
-    console.log("Am I alive?")
+    // console.log("Am I alive?")
     return chart;
 }
