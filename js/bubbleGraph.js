@@ -1,7 +1,11 @@
 //https://medium.freecodecamp.org/a-gentle-introduction-to-d3-how-to-build-a-reusable-bubble-chart-9106dc4f6c46
+// https://bl.ocks.org/dmesquita/37d8efdb3d854db8469af4679b8f984a
 //https://bl.ocks.org/pbogden/854425acb57b4e5a4fdf4242c068a127
 
+// function updateFilter(argument) {
+//     console.log("hej2")
 
+// }
 function bubbleChart() {
     var width = 960,
         height = 960,
@@ -13,15 +17,20 @@ function bubbleChart() {
         colorSet = d3.schemeCategory20c,
         padding = 1.1;
 
-
+    
 
     function chart(selection) {
+        function test(argument) {
+            console.log("Hej")
+        }
         var data = selection.enter().data(),
             div = selection,
-            svg = div.selectAll('svg');
+            svg = div.selectAll('svg')
+            button = div.selectAll('buttonDiv');
+
+            
 
         svg.attr('width', width).attr('height', height);
-  
         var counts = {};
         for (var i = 0; i < data.length; i++) {
             counts[data[i][columnForGroup]] = 1 + (counts[data[i][columnForGroup]] || 0);
@@ -42,7 +51,7 @@ function bubbleChart() {
                             +d["Skill 11"] + 
                             +d["Skill 12"];
             d["radius"] = d[columnForRadius];
-            d["cluster"] = d[columnForGroup];
+            // d["cluster"] = d[columnForGroup];
 
 
             if (!clusters[d[columnForGroup]] || (d.radius > clusters[d[columnForGroup]].radius)) clusters[d[columnForGroup]] = d;
@@ -94,7 +103,7 @@ function bubbleChart() {
         function forceCluster(alpha) {
             for (var i = 0, n = data.length, node, cluster, k = alpha * 1; i < n; ++i) {
                 node = data[i];
-                cluster = clusters[node.cluster];
+                cluster = clusters[node[columnForGroup]];
                 node.vx -= (node.x - cluster.x) * k;
                 node.vy -= (node.y - cluster.y) * k;
           }
@@ -111,19 +120,37 @@ function bubbleChart() {
             .style("fill", function(d) {
                 return colorCircles(d[columnForGroup])
             })
+            .attr("id", function(d) {
+                return d.Alias;
+            })
             .attr('transform', 'translate(' + [width / 2, height / 2] + ')')
             .on("mouseover", function(d) {
                 tooltip.html("Alias: " + d.Alias + "<br>"
                             +"Skill:" + d.totalSkill +"<br>"
-                            +"Major: " + d.Major);
+                            +columnForGroup +" " 
+                            + d[columnForGroup]);
                 return tooltip.style("visibility", "visible");
             })
             .on("mousemove", function() {
                 return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
             })
+            .on("mousedown", function(d) {
+                console.log(data.indexOf(d))
+                // data.splice(data.indexOf(d))
+                d3.selectAll("#"+d.Alias).remove();
+            })
             .on("mouseout", function() {
                 return tooltip.style("visibility", "hidden");
             });
+        
+    }
+
+    chart.columnForGroup = function(value) {
+        if (!arguments.length) {
+            return columnForGroup;
+        }
+        columnForGroup = value;
+        return chart;
     }
 
     // chart.width = function(value) {
