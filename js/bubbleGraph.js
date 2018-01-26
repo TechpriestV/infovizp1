@@ -2,10 +2,7 @@
 // https://bl.ocks.org/dmesquita/37d8efdb3d854db8469af4679b8f984a
 //https://bl.ocks.org/pbogden/854425acb57b4e5a4fdf4242c068a127
 
-// function updateFilter(argument) {
-//     console.log("hej2")
 
-// }
 function bubbleChart() {
     var width = 960,
         height = 960,
@@ -21,16 +18,13 @@ function bubbleChart() {
     
 
     function chart(selection) {
-        // function test(argument) {
-        //     console.log("Hej")
-        // }
+
         var data = selection.enter().data(),
             div = selection,
             svg = div.selectAll('svg')
             button = div.selectAll('buttonDiv');
 
             
-
         svg.attr('width', width).attr('height', height);
         var counts = {};
         for (var i = 0; i < data.length; i++) {
@@ -39,25 +33,11 @@ function bubbleChart() {
         var clusters = new Array(Object.keys(counts).length);
         
         data.forEach(function(d) {
-            // d["totalSkill"]=+d["Skill 1"] + 
-            //                 +d["Skill 2"] + 
-            //                 +d["Skill 3"] + 
-            //                 +d["Skill 4"] + 
-            //                 +d["Skill 5"] + 
-            //                 +d["Skill 6"] + 
-            //                 +d["Skill 7"] + 
-            //                 +d["Skill 8"] + 
-            //                 +d["Skill 9"] + 
-            //                 +d["Skill 10"] + 
-            //                 +d["Skill 11"] + 
-            //                 +d["Skill 12"];
             d["totalSkill"] = 0;
             for (var i = 0; i < skills.length; i++) {
-                // console.log(d[skills[i]])
                 d["totalSkill"] += +d[skills[i]];
             }
             d["radius"] = d[columnForRadius];
-            // d["cluster"] = d[columnForGroup];
 
 
             if (!clusters[d[columnForGroup]] || (d.radius > clusters[d[columnForGroup]].radius)) clusters[d[columnForGroup]] = d;
@@ -115,7 +95,6 @@ function bubbleChart() {
           };
         };
 
-        
         var node = svg.selectAll("circle")
             .data(data)
             .enter()
@@ -134,21 +113,31 @@ function bubbleChart() {
                 tooltip.html("Alias: " + d.Alias + "<br>"
                             +"Skill:" + d.totalSkill +"<br>"
                             +columnForGroup +" " 
-                            + d[columnForGroup]);
+                            + d[columnForGroup] + "<br>"
+                            + "Interests: " + d.Hobbies);
                 return tooltip.style("visibility", "visible");
             })
             .on("mousemove", function() {
                 return tooltip.style("top", (d3.event.pageY - 10) + "px").style("left", (d3.event.pageX + 10) + "px");
             })
-            .on("mousedown", function(d) {
-                console.log(data.indexOf(d))
-                // data.splice(data.indexOf(d))
-                d3.selectAll("#"+d.Alias).remove();
+            .on("click", function(d, i) {
+                console.log(d, i)
+                // removeCircle(d.Alias)
+                // data.splice(i, 1)
+                // node.exit().remove()
             })
             .on("mouseout", function() {
                 return tooltip.style("visibility", "hidden");
             });
-        
+        function removeCircle(id) {
+            // console.log(svg.selectAll("Gellert Grindelwald").remove())
+            // $('#'+id).empty()
+            // console.log($('#'+id))
+            // console.log(node)
+            // node.remove()
+            // console.log("Hej")
+            // node.exit().remove()
+        }
     };
 
     chart.columnForGroup = function(value) {
@@ -163,42 +152,8 @@ function bubbleChart() {
             return skills;
         }
         skills = value;
-        // console.log(skills)
         return skills;
     };
 
-    // chart.width = function(value) {
-    //     if (!arguments.length) {
-    //         return width;
-    //     }
-    //     width = value;
-    //     return chart;
-    // };
-
-    // chart.height = function(value) {
-    //     if (!arguments.length) {
-    //         return height;
-    //     }
-    //     height = value;
-    //     return chart;
-    // };
-
-
-    // chart.columnForGroup = function(value) {
-    //     if (!arguments.columnForGroup) {
-    //         return columnForGroup;
-    //     }
-    //     columnForGroup = value;
-    //     return chart;
-    // };
-
-    // chart.columnForRadius = function(value) {
-    //     if (!arguments.columnForRadius) {
-    //         return columnForRadius;
-    //     }
-    //     columnForRadius = value;
-    //     return chart;
-    // };
-    // console.log("Am I alive?")
     return chart;
 }
